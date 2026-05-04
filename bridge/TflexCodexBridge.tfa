@@ -1,0 +1,5 @@
+[76E1DCB8-4336-4B3A-B775-FD4E67F54A21]
+dll=TflexCodexBridge.dll
+name=Codex MCP Bridge
+autostart=1
+managed=1

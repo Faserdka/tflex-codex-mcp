@@ -1,0 +1,37 @@
+# Local configuration
+.env
+config.json
+*.local.json
+
+# Private project notes and generated references
+tflex_memory.md
+tflex_api_reference.md
+*memory*.md
+*api_reference*.md
+*apireference*.md
+
+# Build outputs
+bin/
+obj/
+bridge/Bin/
+bridge/Obj/
+bridge/bin/
+bridge/obj/
+*.dll
+*.pdb
+*.cache
+*.FileListAbsolute.txt
+
+# Node
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Editor and OS files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+Thumbs.db
+Desktop.ini

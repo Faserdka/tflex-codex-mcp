@@ -1,0 +1,16 @@
+{
+  "name": "tflex-codex-mcp",
+  "version": "0.1.0",
+  "description": "Local MCP server for T-FLEX CAD bridge and Windows GUI fallback control.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "tflex-codex-mcp": "./server.js"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

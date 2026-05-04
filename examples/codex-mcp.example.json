@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "tflex-codex": {
+      "command": "node",
+      "args": [
+        "C:\\Path\\To\\tflex-codex-mcp\\mcp\\server.js"
+      ],
+      "env": {
+        "TFLEX_BRIDGE_URL": "http://127.0.0.1:38517/command",
+        "TFLEX_EXE_PATH": "C:\\Program Files\\T-FLEX CAD 17\\Program\\TFlexCad.exe"
+      }
+    }
+  }
+}
