@@ -60,30 +60,45 @@ install-tflex-plugin.ps1   Plugin installer
 
 ## Quick Start
 
-You can either download a pre-compiled release or build the plugin from source.
+You can either use a pre-compiled release or build from source.
 
-### Option A: Download the release
+### Option A: Using a pre-compiled release
 
-1. Download the latest `tflex-codex-mcp-release.zip` from the [GitHub Releases](https://github.com/Faserdka/tflex-codex-mcp/releases) page.
-2. Extract it to a local folder.
+1. Download the latest `tflex-codex-mcp-release.zip` from the [GitHub Releases](https://github.com/Faserdka/tflex-codex-mcp/releases) page and extract it.
+2. Open PowerShell as Administrator (if T-FLEX is in `Program Files`), navigate to the extracted folder, and run:
+```powershell
+.\install-tflex-plugin.ps1
+```
+3. Skip to step 4 below (Start T-FLEX CAD).
 
-### Option B: Build from source
+### Option B: Building from source
 
-1. Clone the repository:
+### 1. Clone the repository
+
 ```powershell
 git clone https://github.com/Faserdka/tflex-codex-mcp.git
 cd tflex-codex-mcp
 ```
-2. Open `bridge/TflexCodexBridge.csproj` in Visual Studio or build it with MSBuild. If T-FLEX is installed somewhere other than the default location (`C:\Program Files\T-FLEX CAD 17\Program`), pass `TflexCadDir`:
+
+### 2. Build the T-FLEX bridge
+
+Open `bridge/TflexCodexBridge.csproj` in Visual Studio or build it with MSBuild.
+
+If T-FLEX is installed somewhere other than the default location, pass `TflexCadDir`:
+
 ```powershell
 msbuild bridge\TflexCodexBridge.csproj /p:Configuration=Release /p:TflexCadDir="D:\Apps\T-FLEX CAD 17\Program"
 ```
 
----
+The default path is:
 
-### 1. Install the bridge plugin
+```text
+C:\Program Files\T-FLEX CAD 17\Program
+```
 
-Run PowerShell as Administrator if your T-FLEX installation is under `Program Files`. Navigate to the extracted folder and run:
+### 3. Install the bridge plugin
+
+Run PowerShell as Administrator if your T-FLEX installation is under `Program Files`.
 
 ```powershell
 .\install-tflex-plugin.ps1
@@ -95,7 +110,7 @@ For a custom T-FLEX installation path:
 .\install-tflex-plugin.ps1 -TflexRoot "D:\Apps\T-FLEX CAD 17"
 ```
 
-### 2. Start T-FLEX CAD
+### 4. Start T-FLEX CAD
 
 Launch T-FLEX CAD. The bridge plugin should auto-start and listen on:
 
@@ -103,7 +118,7 @@ Launch T-FLEX CAD. The bridge plugin should auto-start and listen on:
 http://127.0.0.1:38517/command
 ```
 
-### 3. Run the MCP server
+### 5. Run the MCP server
 
 ```powershell
 cd mcp
@@ -116,7 +131,7 @@ or:
 node .\server.js
 ```
 
-### 4. Configure your MCP client
+### 6. Configure your MCP client
 
 Copy `examples/codex-mcp.example.json` into your MCP client's configuration and replace:
 
