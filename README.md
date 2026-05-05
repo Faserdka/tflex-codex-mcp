@@ -60,6 +60,19 @@ install-tflex-plugin.ps1   Plugin installer
 
 ## Quick Start
 
+You can either use a pre-compiled release or build from source.
+
+### Option A: Using a pre-compiled release
+
+1. Download the latest `tflex-codex-mcp-release.zip` from the [GitHub Releases](https://github.com/Faserdka/tflex-codex-mcp/releases) page and extract it.
+2. Open PowerShell as Administrator (if T-FLEX is in `Program Files`), navigate to the extracted folder, and run:
+```powershell
+.\install-tflex-plugin.ps1
+```
+3. Skip to step 4 below (Start T-FLEX CAD).
+
+### Option B: Building from source
+
 ### 1. Clone the repository
 
 ```powershell

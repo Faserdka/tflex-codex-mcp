@@ -1,0 +1,43 @@
+name: Build and Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages
+      run: nuget restore bridge\TflexCodexBridge.csproj
+
+    - name: Build T-FLEX Bridge
+      run: msbuild bridge\TflexCodexBridge.csproj /p:Configuration=Release /p:Platform=AnyCPU
+
+    - name: Prepare release folder
+      run: |
+        mkdir release
+        copy bridge\Bin\Release\TflexCodexBridge.dll release\
+        copy bridge\Bin\Release\TflexCodexBridge.tfa release\
+        copy install-tflex-plugin.ps1 release\
+        copy README.md release\
+        copy LICENSE release\
+        xcopy /E /I mcp release\mcp
+        xcopy /E /I examples release\examples
+
+    - name: Create ZIP archive
+      run: Compress-Archive -Path release\* -DestinationPath tflex-codex-mcp-release.zip
+
+    - name: Upload Release Asset
+      uses: softprops/action-gh-release@v2
+      with:
+        files: tflex-codex-mcp-release.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
