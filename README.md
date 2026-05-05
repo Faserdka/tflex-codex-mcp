@@ -60,45 +60,20 @@ install-tflex-plugin.ps1   Plugin installer
 
 ## Quick Start
 
-You can either use a pre-compiled release or build from source.
+### 1. Download the source
 
-### Option A: Using a pre-compiled release
-
-1. Download the latest `tflex-codex-mcp-release.zip` from the [GitHub Releases](https://github.com/Faserdka/tflex-codex-mcp/releases) page and extract it.
-2. Open PowerShell as Administrator (if T-FLEX is in `Program Files`), navigate to the extracted folder, and run:
-```powershell
-.\install-tflex-plugin.ps1
-```
-3. Skip to step 4 below (Start T-FLEX CAD).
-
-### Option B: Building from source
-
-### 1. Clone the repository
-
+Download the source code (zip) from the [latest Release](https://github.com/Faserdka/tflex-codex-mcp/releases) and extract it to a local folder.
+Alternatively, clone the repository:
 ```powershell
 git clone https://github.com/Faserdka/tflex-codex-mcp.git
 cd tflex-codex-mcp
 ```
 
-### 2. Build the T-FLEX bridge
+### 2. Install the bridge plugin
 
-Open `bridge/TflexCodexBridge.csproj` in Visual Studio or build it with MSBuild.
+Run PowerShell as Administrator if your T-FLEX installation is under `Program Files`. Navigate to the repository folder and run the installer:
 
-If T-FLEX is installed somewhere other than the default location, pass `TflexCadDir`:
-
-```powershell
-msbuild bridge\TflexCodexBridge.csproj /p:Configuration=Release /p:TflexCadDir="D:\Apps\T-FLEX CAD 17\Program"
-```
-
-The default path is:
-
-```text
-C:\Program Files\T-FLEX CAD 17\Program
-```
-
-### 3. Install the bridge plugin
-
-Run PowerShell as Administrator if your T-FLEX installation is under `Program Files`.
+The script will automatically use MSBuild to compile the C# bridge against your local T-FLEX installation before installing it.
 
 ```powershell
 .\install-tflex-plugin.ps1

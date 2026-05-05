@@ -14,23 +14,46 @@ $applicationsIni = Join-Path $programDir "Applications.ini"
 $bridgeId = "76E1DCB8-4336-4B3A-B775-FD4E67F54A21"
 
 if (-not $BridgeBuildDir) {
-    # If bridge\Bin\Release exists, assume dev environment. Otherwise, assume release zip.
-    $devPath = Join-Path $projectRoot "bridge\Bin\$Configuration"
-    if (Test-Path -LiteralPath $devPath) {
-        $BridgeBuildDir = $devPath
-    } else {
-        $BridgeBuildDir = $projectRoot
-    }
+    $BridgeBuildDir = Join-Path $projectRoot "bridge\Bin\$Configuration"
 }
 
 $dllPath = Join-Path $BridgeBuildDir "TflexCodexBridge.dll"
 $tfaPath = Join-Path $BridgeBuildDir "TflexCodexBridge.tfa"
 
-if (-not (Test-Path -LiteralPath $dllPath)) {
-    throw "Bridge DLL was not found: $dllPath. If building from source, build bridge\TflexCodexBridge.csproj first."
-}
-if (-not (Test-Path -LiteralPath $tfaPath)) {
-    throw "Bridge descriptor was not found: $tfaPath. If building from source, build bridge\TflexCodexBridge.csproj first."
+# Auto-compile if missing
+if (-not (Test-Path -LiteralPath $dllPath) -or -not (Test-Path -LiteralPath $tfaPath)) {
+    Write-Host "Bridge DLL not found. Attempting to auto-compile using MSBuild..."
+
+    $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+    $msbuildPath = $null
+    if (Test-Path $vswhere) {
+        $msbuildPath = & $vswhere -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe | Select-Object -First 1
+    }
+
+    if (-not $msbuildPath) {
+        $msbuildPath = Get-Command msbuild.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+    }
+
+    if (-not $msbuildPath) {
+        # Fallback to .NET Framework directory
+        $frameworkDir = [System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()
+        $msbuildPath = Join-Path $frameworkDir "MSBuild.exe"
+    }
+
+    if (-not (Test-Path $msbuildPath)) {
+        throw "MSBuild could not be found. Please ensure .NET Framework or Visual Studio Build Tools are installed."
+    }
+
+    $csproj = Join-Path $projectRoot "bridge\TflexCodexBridge.csproj"
+    & $msbuildPath $csproj /p:Configuration=$Configuration /p:Platform=AnyCPU /p:TflexCadDir="$programDir"
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Auto-compilation failed. Please build bridge\TflexCodexBridge.csproj manually."
+    }
+
+    if (-not (Test-Path -LiteralPath $dllPath)) {
+        throw "Compilation succeeded, but DLL was not found at expected path: $dllPath"
+    }
 }
 if (-not (Test-Path -LiteralPath $programDir)) {
     throw "T-FLEX Program directory was not found: $programDir"
