@@ -14,17 +14,23 @@ $applicationsIni = Join-Path $programDir "Applications.ini"
 $bridgeId = "76E1DCB8-4336-4B3A-B775-FD4E67F54A21"
 
 if (-not $BridgeBuildDir) {
-    $BridgeBuildDir = Join-Path $projectRoot "bridge\Bin\$Configuration"
+    # If bridge\Bin\Release exists, assume dev environment. Otherwise, assume release zip.
+    $devPath = Join-Path $projectRoot "bridge\Bin\$Configuration"
+    if (Test-Path -LiteralPath $devPath) {
+        $BridgeBuildDir = $devPath
+    } else {
+        $BridgeBuildDir = $projectRoot
+    }
 }
 
 $dllPath = Join-Path $BridgeBuildDir "TflexCodexBridge.dll"
 $tfaPath = Join-Path $BridgeBuildDir "TflexCodexBridge.tfa"
 
 if (-not (Test-Path -LiteralPath $dllPath)) {
-    throw "Bridge DLL was not found: $dllPath. Build bridge\TflexCodexBridge.csproj first."
+    throw "Bridge DLL was not found: $dllPath. If building from source, build bridge\TflexCodexBridge.csproj first."
 }
 if (-not (Test-Path -LiteralPath $tfaPath)) {
-    throw "Bridge descriptor was not found: $tfaPath. Build bridge\TflexCodexBridge.csproj first."
+    throw "Bridge descriptor was not found: $tfaPath. If building from source, build bridge\TflexCodexBridge.csproj first."
 }
 if (-not (Test-Path -LiteralPath $programDir)) {
     throw "T-FLEX Program directory was not found: $programDir"
