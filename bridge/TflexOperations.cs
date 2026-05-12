@@ -314,6 +314,12 @@ namespace TflexCodexBridge.Dynamic
             AddReference(parameters, "System.Windows.Forms.dll");
             AddReference(parameters, "System.Xml.dll");
             AddReference(parameters, "System.Web.Extensions.dll");
+            AddReference(parameters, Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                @"Microsoft.NET\Framework64\v4.0.30319\System.Runtime.dll"));
+            AddReference(parameters, Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                @"Microsoft.NET\Framework\v4.0.30319\System.Runtime.dll"));
             AddReference(parameters, typeof(TflexOperations).Assembly.Location);
             AddReference(parameters, typeof(Document).Assembly.Location);
 

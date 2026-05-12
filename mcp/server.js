@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
+import { recipeTools, buildRecipeBridgeCall } from "./tflex-recipes.js";
+import { docsTools, callDocsTool } from "./tflex-docs.js";
 
 const BRIDGE_URL = process.env.TFLEX_BRIDGE_URL || "http://127.0.0.1:38517/command";
 const TMP_DIR = process.env.TFLEX_MCP_TMP || path.join(os.tmpdir(), "tflex-codex");
@@ -220,7 +222,9 @@ const tools = [
       },
       required: ["text"]
     }
-  }
+  },
+  ...docsTools,
+  ...recipeTools
 ];
 
 let buffer = Buffer.alloc(0);
@@ -298,6 +302,9 @@ async function handleMessage(message) {
 }
 
 async function callTool(name, args) {
+  const docsResult = await callDocsTool(name, args);
+  if (docsResult) return docsResult;
+
   switch (name) {
     case "tflex_bridge_call":
       return callBridge(args.command, args.args || {});
@@ -338,6 +345,10 @@ async function callTool(name, args) {
     case "gui_type_text":
       return runGuiScript("type_text", args);
     default:
+      {
+        const recipe = buildRecipeBridgeCall(name, args);
+        if (recipe) return callBridge(recipe.command, recipe.args);
+      }
       throw new Error(`Unknown tool: ${name}`);
   }
 }
